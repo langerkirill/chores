@@ -142,6 +142,7 @@ async function deleteChore(id) {
     const saved = getLocalChores().filter((chore) => chore.id !== id);
     setLocalChores(saved);
     state.chores = saved;
+    setStatus("Entry removed.", "success");
     render();
     return;
   }
@@ -217,17 +218,20 @@ function renderCalendar() {
     const isToday = dateValue === today;
 
     cells.push(`
-      <button class="day-cell ${outside ? "outside" : ""} ${isToday ? "today" : ""}" type="button" data-date="${dateValue}" aria-label="${formatReadableDate(dateValue)}">
-        <span class="day-number">${cellDate.getDate()}</span>
-        <span class="day-entries">
+      <div class="day-cell ${outside ? "outside" : ""} ${isToday ? "today" : ""}">
+        <button class="day-select" type="button" data-date="${dateValue}" aria-label="Set date to ${formatReadableDate(dateValue)}">
+          <span class="day-number">${cellDate.getDate()}</span>
+        </button>
+        <div class="day-entries">
           ${choresForDay.map((chore) => `
-            <span class="chore-pill" title="${escapeHtml(chore.person)}: ${escapeHtml(chore.chore)}">
-              <span style="background:${people[chore.person]?.color || "#b96f3e"}"></span>
-              <span>${escapeHtml(chore.chore)}</span>
-            </span>
+            <div class="chore-pill" title="${escapeHtml(chore.person)}: ${escapeHtml(chore.chore)}">
+              <span class="pill-dot" style="background:${people[chore.person]?.color || "#b96f3e"}"></span>
+              <span class="pill-label">${escapeHtml(chore.chore)}</span>
+              <button class="pill-delete-button" type="button" data-delete-id="${escapeHtml(chore.id)}" aria-label="Delete ${escapeHtml(chore.chore)}">×</button>
+            </div>
           `).join("")}
-        </span>
-      </button>
+        </div>
+      </div>
     `);
   }
 
@@ -318,7 +322,17 @@ function bindEvents() {
     }
   });
 
-  els.calendarGrid.addEventListener("click", (event) => {
+  els.calendarGrid.addEventListener("click", async (event) => {
+    const deleteButton = event.target.closest("[data-delete-id]");
+    if (deleteButton) {
+      try {
+        await deleteChore(deleteButton.dataset.deleteId);
+      } catch (error) {
+        setStatus(`Could not delete: ${error.message}`, "error");
+      }
+      return;
+    }
+
     const cell = event.target.closest("[data-date]");
     if (!cell) return;
     els.dateInput.value = cell.dataset.date;

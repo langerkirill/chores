@@ -395,6 +395,24 @@ input:focus {
   background: #fff9f4;
 }
 
+.day-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 1.55rem;
+  margin: -0.12rem 0 0 -0.12rem;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+}
+
+.day-select:hover {
+  background: rgba(185, 111, 62, 0.1);
+}
+
 .day-number {
   display: inline-flex;
   align-items: center;
@@ -418,28 +436,49 @@ input:focus {
 
 .chore-pill {
   display: grid;
-  grid-template-columns: 0.45rem minmax(0, 1fr);
+  grid-template-columns: 0.45rem minmax(0, 1fr) 1.25rem;
   align-items: center;
   gap: 0.35rem;
   min-width: 0;
   border-radius: 7px;
-  padding: 0.25rem 0.35rem;
+  padding: 0.22rem 0.25rem 0.22rem 0.35rem;
   background: #ffffff;
   font-size: 0.73rem;
   box-shadow: inset 0 0 0 1px rgba(233, 224, 216, 0.75);
 }
 
-.chore-pill span:first-child {
+.pill-dot {
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 999px;
 }
 
-.chore-pill span:last-child {
+.pill-label {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.pill-delete-button {
+  display: inline-grid;
+  place-items: center;
+  width: 1.18rem;
+  height: 1.18rem;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.pill-delete-button:hover,
+.pill-delete-button:focus-visible {
+  background: var(--surface-muted);
+  color: #a0302b;
+  outline: none;
 }
 
 .empty {
@@ -535,11 +574,11 @@ input:focus {
   }
 
   .chore-pill {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) 1.2rem;
     padding: 0.25rem;
   }
 
-  .chore-pill span:first-child {
+  .pill-dot {
     display: none;
   }
 }
