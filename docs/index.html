@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rekindle Home Chores</title>
+    <meta name="description" content="Shared chore calendar for Asuka and Kirill.">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./config.js"></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Rekindle <span>Home</span></h1>
+        <p>Chore Tracker</p>
+      </div>
+      <button class="icon-button" id="settingsButton" type="button" aria-label="Open settings">⚙</button>
+    </header>
+
+    <main class="layout">
+      <section class="sidebar" aria-label="Chore controls">
+        <form class="panel" id="choreForm">
+          <div class="panel-header">
+            <h2>Log a Chore</h2>
+          </div>
+          <div class="panel-body">
+            <fieldset>
+              <legend>Who did it?</legend>
+              <div class="person-toggle" id="personToggle" role="radiogroup" aria-label="Person">
+                <button class="person-button asuka selected" type="button" role="radio" aria-checked="true" data-person="Asuka">
+                  <span></span>Asuka
+                </button>
+                <button class="person-button kirill" type="button" role="radio" aria-checked="false" data-person="Kirill">
+                  <span></span>Kirill
+                </button>
+              </div>
+            </fieldset>
+
+            <label>
+              <span>Date</span>
+              <input id="dateInput" name="date" type="date" required>
+            </label>
+
+            <fieldset>
+              <legend>Chore</legend>
+              <div class="chore-grid" id="choreGrid">
+                <button type="button" data-chore="Dishes">Dishes</button>
+                <button type="button" data-chore="Vacuuming">Vacuuming</button>
+                <button type="button" data-chore="Laundry">Laundry</button>
+                <button type="button" data-chore="Trash">Trash</button>
+                <button type="button" data-chore="Groceries">Groceries</button>
+                <button type="button" data-chore="Cooking">Cooking</button>
+                <button type="button" data-chore="Bathrooms">Bathrooms</button>
+                <button type="button" data-chore="Yard Work">Yard Work</button>
+              </div>
+              <input id="customChoreInput" name="customChore" type="text" maxlength="80" placeholder="Or type a custom chore...">
+            </fieldset>
+
+            <button class="primary-button" type="submit">Add to Calendar</button>
+            <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <section class="stats" aria-label="Monthly totals">
+          <article class="stat-card asuka">
+            <span>Asuka</span>
+            <strong id="asukaCount">0</strong>
+            <small>this month</small>
+          </article>
+          <article class="stat-card kirill">
+            <span>Kirill</span>
+            <strong id="kirillCount">0</strong>
+            <small>this month</small>
+          </article>
+        </section>
+
+        <section class="panel recent-panel" aria-label="Recent entries">
+          <div class="panel-header">
+            <h2>Recent Entries</h2>
+          </div>
+          <div class="recent-list" id="recentList"></div>
+        </section>
+      </section>
+
+      <section class="calendar-panel" aria-label="Chore calendar">
+        <div class="calendar-header">
+          <button class="icon-button" id="previousMonthButton" type="button" aria-label="Previous month">‹</button>
+          <h2 id="monthLabel">Month</h2>
+          <button class="icon-button" id="nextMonthButton" type="button" aria-label="Next month">›</button>
+        </div>
+        <div class="weekday-grid" aria-hidden="true">
+          <span>Sun</span>
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </section>
+    </main>
+
+    <dialog class="settings-dialog" id="settingsDialog">
+      <form method="dialog">
+        <div class="settings-header">
+          <h2>Settings</h2>
+          <button class="icon-button" value="close" aria-label="Close settings">×</button>
+        </div>
+        <label>
+          <span>Worker API URL</span>
+          <input id="apiUrlInput" type="url" placeholder="https://chores-api.your-subdomain.workers.dev">
+        </label>
+        <p>
+          Leave this blank for local-only storage in this browser. Add the Cloudflare Worker URL here for shared persistence.
+        </p>
+        <menu>
+          <button type="button" id="clearLocalButton">Clear Local Data</button>
+          <button class="primary-button" id="saveSettingsButton" type="button">Save</button>
+        </menu>
+      </form>
+    </dialog>
+  </body>
+</html>

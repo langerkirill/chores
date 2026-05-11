@@ -1,0 +1,12 @@
+name = "chores-api"
+main = "worker/src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+ALLOWED_ORIGINS = "*"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chores"
+database_id = "replace-with-cloudflare-d1-database-id"
+migrations_dir = "worker/migrations"
