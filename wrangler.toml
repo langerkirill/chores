@@ -3,10 +3,10 @@ main = "worker/src/index.js"
 compatibility_date = "2025-01-01"
 
 [vars]
-ALLOWED_ORIGINS = "*"
+ALLOWED_ORIGINS = "https://langerkirill.github.io"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "chores"
-database_id = "replace-with-cloudflare-d1-database-id"
+database_id = "14739c54-46a0-44ca-8f5f-d09532d0f749"
 migrations_dir = "worker/migrations"
