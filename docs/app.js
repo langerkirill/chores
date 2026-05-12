@@ -107,13 +107,46 @@ async function loadChores() {
 
   try {
     const payload = await apiRequest("/api/chores");
-    state.chores = payload.chores || [];
-    setStatus("Synced with shared database.", "success");
+    const remoteChores = payload.chores || [];
+    const migratedChores = await migrateLocalChores(remoteChores);
+    state.chores = migratedChores;
+    setStatus(
+      migratedChores.length > remoteChores.length
+        ? "Synced local entries to the shared database."
+        : "Synced with shared database.",
+      "success"
+    );
   } catch (error) {
     state.chores = getLocalChores();
     setStatus(`Sync unavailable: ${error.message}. Showing local data.`, "error");
   }
   render();
+}
+
+async function migrateLocalChores(remoteChores) {
+  const localChores = getLocalChores();
+  if (!localChores.length) {
+    return remoteChores;
+  }
+
+  const remoteIds = new Set(remoteChores.map((chore) => chore.id));
+  const unsynced = localChores.filter((chore) => chore.id && !remoteIds.has(chore.id));
+  if (!unsynced.length) {
+    localStorage.removeItem(storageKeys.chores);
+    return remoteChores;
+  }
+
+  const migrated = [];
+  for (const chore of unsynced) {
+    const payload = await apiRequest("/api/chores", {
+      method: "POST",
+      body: JSON.stringify(chore)
+    });
+    migrated.push(payload.chore);
+  }
+
+  localStorage.removeItem(storageKeys.chores);
+  return [...migrated, ...remoteChores];
 }
 
 async function addChore(chore) {
