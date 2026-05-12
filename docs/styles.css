@@ -85,9 +85,9 @@ label span,
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(280px, 330px) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 290px) minmax(0, 1fr);
   gap: 1.4rem;
-  max-width: 1160px;
+  max-width: 1720px;
   margin: 0 auto;
   padding: clamp(1rem, 4vw, 2rem);
 }
@@ -378,12 +378,18 @@ input:focus {
 }
 
 .day-cell {
-  min-height: 6.6rem;
+  min-height: 9.5rem;
   border: 1.5px solid transparent;
   border-radius: 10px;
   background: var(--bg);
-  padding: 0.42rem;
+  padding: 0.5rem;
   overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.day-cell:hover {
+  border-color: rgba(185, 111, 62, 0.3);
 }
 
 .day-cell.outside {
@@ -436,28 +442,31 @@ input:focus {
 
 .chore-pill {
   display: grid;
-  grid-template-columns: 0.45rem minmax(0, 1fr) 1.25rem;
+  grid-template-columns: 0.5rem minmax(0, 1fr) 1.25rem;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   min-width: 0;
   border-radius: 7px;
-  padding: 0.22rem 0.25rem 0.22rem 0.35rem;
+  padding: 0.3rem 0.3rem 0.3rem 0.4rem;
   background: #ffffff;
-  font-size: 0.73rem;
+  font-size: 0.82rem;
+  line-height: 1.2;
   box-shadow: inset 0 0 0 1px rgba(233, 224, 216, 0.75);
 }
 
 .pill-dot {
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 999px;
 }
 
 .pill-label {
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
 }
 
 .pill-delete-button {
@@ -487,16 +496,90 @@ input:focus {
   padding: 0.35rem 0;
 }
 
-.settings-dialog {
+.settings-dialog,
+.day-dialog {
   width: min(32rem, calc(100vw - 2rem));
   border: 1px solid var(--line);
   border-radius: 12px;
   color: var(--ink);
   box-shadow: var(--shadow);
+  padding: 1.25rem;
 }
 
-.settings-dialog::backdrop {
+.settings-dialog::backdrop,
+.day-dialog::backdrop {
   background: rgba(42, 36, 32, 0.28);
+}
+
+.day-dialog .day-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.day-dialog h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+}
+
+.day-dialog-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.day-dialog-entry {
+  display: grid;
+  grid-template-columns: 0.55rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.day-dialog-entry .dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+}
+
+.day-dialog-entry strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.day-dialog-entry span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.day-dialog-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.day-dialog-actions button {
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 2.35rem;
+  padding: 0 1rem;
+}
+
+.day-dialog-actions button.primary-button {
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
 }
 
 .settings-dialog form {
@@ -540,11 +623,11 @@ input:focus {
   }
 
   .sidebar {
-    order: 2;
+    order: 1;
   }
 
   .calendar-panel {
-    order: 1;
+    order: 2;
   }
 }
 
@@ -569,7 +652,7 @@ input:focus {
   }
 
   .day-cell {
-    min-height: 5rem;
+    min-height: 6.5rem;
     padding: 0.3rem;
   }
 

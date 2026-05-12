@@ -33,8 +33,15 @@ const els = {
   settingsDialog: document.querySelector("#settingsDialog"),
   apiUrlInput: document.querySelector("#apiUrlInput"),
   saveSettingsButton: document.querySelector("#saveSettingsButton"),
-  clearLocalButton: document.querySelector("#clearLocalButton")
+  clearLocalButton: document.querySelector("#clearLocalButton"),
+  dayDialog: document.querySelector("#dayDialog"),
+  dayDialogTitle: document.querySelector("#dayDialogTitle"),
+  dayDialogList: document.querySelector("#dayDialogList"),
+  dayDialogCloseButton: document.querySelector("#dayDialogCloseButton"),
+  dayDialogUseDateButton: document.querySelector("#dayDialogUseDateButton")
 };
+
+const dayDialogState = { date: null };
 
 function formatDate(date) {
   const year = date.getFullYear();
@@ -251,10 +258,8 @@ function renderCalendar() {
     const isToday = dateValue === today;
 
     cells.push(`
-      <div class="day-cell ${outside ? "outside" : ""} ${isToday ? "today" : ""}">
-        <button class="day-select" type="button" data-date="${dateValue}" aria-label="Set date to ${formatReadableDate(dateValue)}">
-          <span class="day-number">${cellDate.getDate()}</span>
-        </button>
+      <div class="day-cell ${outside ? "outside" : ""} ${isToday ? "today" : ""}" data-date="${dateValue}" role="button" tabindex="0" aria-label="View chores for ${formatReadableDate(dateValue)}">
+        <span class="day-number">${cellDate.getDate()}</span>
         <div class="day-entries">
           ${choresForDay.map((chore) => `
             <div class="chore-pill" title="${escapeHtml(chore.person)}: ${escapeHtml(chore.chore)}">
@@ -271,12 +276,42 @@ function renderCalendar() {
   els.calendarGrid.innerHTML = cells.join("");
 }
 
+function renderDayDialog() {
+  if (!dayDialogState.date || !els.dayDialog.open) return;
+  const date = dayDialogState.date;
+  els.dayDialogTitle.textContent = formatReadableDate(date);
+  const choresForDay = state.chores.filter((chore) => chore.date === date);
+
+  if (!choresForDay.length) {
+    els.dayDialogList.innerHTML = '<p class="empty">No chores logged for this date.</p>';
+    return;
+  }
+
+  els.dayDialogList.innerHTML = choresForDay.map((chore) => `
+    <article class="day-dialog-entry">
+      <span class="dot" style="background:${people[chore.person]?.color || "#b96f3e"}"></span>
+      <div>
+        <strong>${escapeHtml(chore.chore)}</strong>
+        <span>${escapeHtml(chore.person)}</span>
+      </div>
+      <button class="delete-button" type="button" data-delete-id="${escapeHtml(chore.id)}" aria-label="Delete ${escapeHtml(chore.chore)}">×</button>
+    </article>
+  `).join("");
+}
+
+function openDayDialog(date) {
+  dayDialogState.date = date;
+  renderDayDialog();
+  if (!els.dayDialog.open) els.dayDialog.showModal();
+}
+
 function render() {
   renderPersonButtons();
   renderChoreButtons();
   renderStats();
   renderRecent();
   renderCalendar();
+  renderDayDialog();
 }
 
 function formatReadableDate(value) {
@@ -368,7 +403,32 @@ function bindEvents() {
 
     const cell = event.target.closest("[data-date]");
     if (!cell) return;
-    els.dateInput.value = cell.dataset.date;
+    openDayDialog(cell.dataset.date);
+  });
+
+  els.dayDialogList.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-delete-id]");
+    if (!button) return;
+    try {
+      await deleteChore(button.dataset.deleteId);
+    } catch (error) {
+      setStatus(`Could not delete: ${error.message}`, "error");
+    }
+  });
+
+  els.dayDialogCloseButton.addEventListener("click", () => {
+    els.dayDialog.close();
+  });
+
+  els.dayDialog.addEventListener("close", () => {
+    dayDialogState.date = null;
+  });
+
+  els.dayDialogUseDateButton.addEventListener("click", () => {
+    if (dayDialogState.date) {
+      els.dateInput.value = dayDialogState.date;
+    }
+    els.dayDialog.close();
   });
 
   els.previousMonthButton.addEventListener("click", () => {
