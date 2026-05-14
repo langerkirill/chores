@@ -652,16 +652,44 @@ input:focus {
   }
 
   .day-cell {
-    min-height: 6.5rem;
-    padding: 0.3rem;
+    min-height: 4.6rem;
+    padding: 0.35rem;
+  }
+
+  .day-number {
+    font-size: 0.82rem;
+  }
+
+  .day-entries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.22rem;
+    margin-top: 0.3rem;
   }
 
   .chore-pill {
-    grid-template-columns: minmax(0, 1fr) 1.2rem;
-    padding: 0.25rem;
+    display: inline-block;
+    grid-template-columns: none;
+    width: 0.65rem;
+    height: 0.65rem;
+    padding: 0;
+    background: var(--accent);
+    border-radius: 999px;
+    box-shadow: none;
+    font-size: 0;
   }
 
-  .pill-dot {
+  .chore-pill[data-person="Asuka"] {
+    background: var(--asuka);
+  }
+
+  .chore-pill[data-person="Kirill"] {
+    background: var(--kirill);
+  }
+
+  .pill-dot,
+  .pill-label,
+  .pill-delete-button {
     display: none;
   }
 }

@@ -262,7 +262,7 @@ function renderCalendar() {
         <span class="day-number">${cellDate.getDate()}</span>
         <div class="day-entries">
           ${choresForDay.map((chore) => `
-            <div class="chore-pill" title="${escapeHtml(chore.person)}: ${escapeHtml(chore.chore)}">
+            <div class="chore-pill" data-person="${escapeHtml(chore.person)}" title="${escapeHtml(chore.person)}: ${escapeHtml(chore.chore)}">
               <span class="pill-dot" style="background:${people[chore.person]?.color || "#b96f3e"}"></span>
               <span class="pill-label">${escapeHtml(chore.chore)}</span>
               <button class="pill-delete-button" type="button" data-delete-id="${escapeHtml(chore.id)}" aria-label="Delete ${escapeHtml(chore.chore)}">×</button>
