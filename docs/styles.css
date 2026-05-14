@@ -396,7 +396,12 @@ input:focus {
   opacity: 0.38;
 }
 
-.day-cell.today {
+.calendar-grid .day-cell:nth-child(7n + 1),
+.calendar-grid .day-cell:nth-child(7n) {
+  background: var(--surface-muted);
+}
+
+.calendar-grid .day-cell.today {
   border-color: var(--accent);
   background: #fff9f4;
 }
