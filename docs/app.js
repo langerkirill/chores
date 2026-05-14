@@ -301,8 +301,8 @@ function renderDayDialog() {
 
 function openDayDialog(date) {
   dayDialogState.date = date;
-  renderDayDialog();
   if (!els.dayDialog.open) els.dayDialog.showModal();
+  renderDayDialog();
 }
 
 function render() {
